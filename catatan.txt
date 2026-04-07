@@ -1,0 +1,48 @@
+Todo :
+- coba pastiin apakah postingan yang sudah di like kita itu ada bedanya
+- Tanya ai tentang Web Socket & Message Queue (day 4)
+- cek fetch autorisasinya pas di /home
+- Tanya bagaimana cara aplikasikan infinite scroll, apakah pakai pagination
+
+
+Tanya mas noval :
+- struktur folder
+
+
+Setup :
+- React
+- Tailwind
+- Shadcn + dark mode
+- React router
+- Redux
+- React hook form + zod
+
+- threads context
+- profile card masih dummy
+- suggestions card masih dummy
+
+Belum :
+- modal create post
+- modal edit profile
+- modal komentar
+
+
+Halaman :
+- Login
+- Register
+- Forgot password
+- Reset password
+- home
+
+- detail post /@username/post/post_id
+- detail image (bentuknya component atau page terserah) /@username/post/post_id/media
+- profile /@username
+- profile /posts /@username/posts
+- profile /media /@username/media
+- profile edit /@username/edit
+- search user /search
+
+- Halaman untuk error 
+- Halaman notfound
+- Pertimbangkan skeleton page
+
