@@ -1,4 +1,3 @@
-import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
 import {
   Avatar,
@@ -9,10 +8,14 @@ import { Link } from "react-router";
 import { useEffect, useState } from "react";
 import fetchData from "@/shared/utils/fetch";
 import type { Follow } from "@/shared/types";
-import { useAppSelector } from "@/shared/hooks/redux";
+import { useAppDispatch, useAppSelector } from "@/shared/hooks/redux";
+import FollowButton from "@/features/follow/FollowButton";
+import { updateFollowerCount } from "@/shared/slices/authSlice";
 
 const SuggestionsCard = () => {
-  const [users, setUsers] = useState<Follow[]>();
+  const dispatch = useAppDispatch();
+  const [users, setUsers] = useState<Follow[]>([]);
+  const user = useAppSelector((state) => state.auth.user);
   const token = useAppSelector((state) => state.auth.token);
 
   useEffect(() => {
@@ -31,6 +34,47 @@ const SuggestionsCard = () => {
 
     getUsers();
   }, [token]);
+
+  const toggleFollow = async (
+    followerId: string,
+    isFollowing: boolean,
+  ): Promise<void> => {
+    if (isFollowing) {
+      await fetchData({
+        url: `${import.meta.env.VITE_API_URL}/api/follows/${followerId}`,
+        options: {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      });
+
+      dispatch(updateFollowerCount("decrement"));
+    } else {
+      await fetchData({
+        url: `${import.meta.env.VITE_API_URL}/api/follows`,
+        options: {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            followerId: user?.id,
+            followingId: followerId,
+          }),
+        },
+      });
+
+      dispatch(updateFollowerCount("increment"));
+    }
+
+    setUsers((prev) =>
+      prev.map((p) =>
+        p.id === followerId ? { ...p, isFollowing: !isFollowing } : p,
+      ),
+    );
+  };
 
   return (
     <Card className="p-4">
@@ -57,9 +101,14 @@ const SuggestionsCard = () => {
               </div>
             </div>
 
-            <Button variant="outline" size="sm" className="rounded-full">
+            {/* <Button variant="outline" size="sm" className="rounded-full">
               Follow
-            </Button>
+            </Button> */}
+            <FollowButton
+              id={user.id}
+              isFollowing={user.isFollowing}
+              toggleFollow={toggleFollow}
+            />
           </div>
         ))}
       </div>

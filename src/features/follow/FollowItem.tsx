@@ -6,6 +6,7 @@ import {
 import type { Follow } from "@/shared/types";
 import FollowButton from "./FollowButton";
 import { Link } from "react-router";
+import { useAppSelector } from "@/shared/hooks/redux";
 // import { Link } from "lucide-react";
 
 interface FollowItemProps extends Follow {
@@ -20,6 +21,8 @@ const FollowItem = ({
   isFollowing,
   toggleFollow,
 }: FollowItemProps) => {
+  const user = useAppSelector((state) => state.auth.user);
+
   return (
     <div className="flex justify-between items-center">
       {/* Left */}
@@ -41,11 +44,13 @@ const FollowItem = ({
       </div>
 
       {/* Right */}
-      <FollowButton
-        id={id}
-        isFollowing={isFollowing}
-        toggleFollow={toggleFollow}
-      />
+      {user && user.username !== username && (
+        <FollowButton
+          id={id}
+          isFollowing={isFollowing}
+          toggleFollow={toggleFollow}
+        />
+      )}
     </div>
   );
 };

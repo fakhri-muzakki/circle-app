@@ -67,9 +67,9 @@ const authSlice = createSlice({
         const user = state.user;
         let editUser: User;
         if (action.payload === "increment") {
-          editUser = { ...user, followers: user.followers + 1 };
+          editUser = { ...user, following: user.following + 1 };
         } else {
-          editUser = { ...user, followers: user.followers - 1 };
+          editUser = { ...user, following: user.following - 1 };
         }
 
         state.user = editUser;
