@@ -10,6 +10,15 @@ const initialState: Threads = {
   threads: [],
 };
 
+interface AddThread {
+  id: string;
+  content: string;
+  image: string;
+  name: string; //  nanti ganti jadi fullname
+  username: string;
+  avatar: string;
+}
+
 const threadSlice = createSlice({
   name: "threads",
   initialState,
@@ -44,7 +53,7 @@ const threadSlice = createSlice({
         return result;
       });
 
-      //   await fetchData({url: "http://localhost:3000/api/likes", options:{
+      //   await fetchData({url: "${import.meta.env.VITE_API_URL}/api/likes", options:{
       //     headers: {
       //         "Content-Type": "application/json"
       //     },
@@ -54,8 +63,37 @@ const threadSlice = createSlice({
     setThreads: (state, action: PayloadAction<Post[]>) => {
       state.threads = action.payload;
     },
+
+    addThread: (state, action: PayloadAction<AddThread>) => {
+      const { id, image, content, name, username, avatar } = action.payload;
+
+      const thread: Post = {
+        id,
+        name,
+        image,
+        content,
+        likes: 0,
+        username,
+        avatar,
+        comments: 0,
+        isLiked: false,
+        time: "a few seconds ago",
+      };
+
+      state.threads = [thread, ...state.threads];
+    },
+
+    addTotalComments: (state, action: PayloadAction<{ threadId: string }>) => {
+      const { threadId } = action.payload;
+      state.threads = state.threads.map((thread) =>
+        thread.id === threadId
+          ? { ...thread, comments: thread.comments + 1 }
+          : thread,
+      );
+    },
   },
 });
 
-export const { toggleLike, setThreads } = threadSlice.actions;
+export const { toggleLike, setThreads, addThread, addTotalComments } =
+  threadSlice.actions;
 export default threadSlice.reducer;

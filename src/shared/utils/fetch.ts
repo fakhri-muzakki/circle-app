@@ -10,7 +10,7 @@ const fetchData = async <T>({
   try {
     const res = await fetch(url, options);
 
-    if (!res.ok) {
+    if (!res.ok && res.status >= 500) {
       throw new Error(`Terjadi kesalahan pada saat hit end point : ${url}`);
     }
 

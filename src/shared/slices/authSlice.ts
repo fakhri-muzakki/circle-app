@@ -2,8 +2,14 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 type User = {
   id: string;
+  name: string;
   email: string;
+  avatar: string;
   password: string;
+  username: string;
+  bio: string;
+  followers: number;
+  following: number;
 };
 
 interface LoginData {
@@ -42,8 +48,37 @@ const authSlice = createSlice({
       localStorage.removeItem("user");
       localStorage.removeItem("token");
     },
+    // Untuk edit user profile
+    editUserProfile: (state, action: PayloadAction<Partial<User>>) => {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ ...state.user, ...action.payload }),
+        );
+      }
+    },
+
+    updateFollowerCount: (
+      state,
+      action: PayloadAction<"increment" | "decrement">,
+    ) => {
+      if (state.user) {
+        const user = state.user;
+        let editUser: User;
+        if (action.payload === "increment") {
+          editUser = { ...user, followers: user.followers + 1 };
+        } else {
+          editUser = { ...user, followers: user.followers - 1 };
+        }
+
+        state.user = editUser;
+        localStorage.setItem("user", JSON.stringify(editUser));
+      }
+    },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, editUserProfile, updateFollowerCount } =
+  authSlice.actions;
 export default authSlice.reducer;

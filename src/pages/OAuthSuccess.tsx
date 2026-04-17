@@ -21,7 +21,7 @@ const OAuthSuccess = () => {
       }
 
       const result = await fetchData<LoginRes>({
-        url: `http://localhost:3000/api/users/${userId}`,
+        url: `${import.meta.env.VITE_API_URL}/api/users/${userId}`,
       });
 
       if (!result) {

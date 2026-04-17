@@ -44,7 +44,7 @@ const LoginPage = () => {
 
   const onSubmit = async (payload: LoginData) => {
     const result = await fetchData<LoginRes>({
-      url: "http://localhost:3000/api/auth/login",
+      url: `${import.meta.env.VITE_API_URL}/api/auth/login`,
       options: {
         method: "POST",
         headers: {
@@ -119,7 +119,7 @@ const LoginPage = () => {
             Login
           </Button>
           <a
-            href="http://localhost:3000/api/auth/google"
+            href={`${import.meta.env.VITE_API_URL}/api/auth/google`}
             className={buttonVariants({ variant: "outline" }) + "block w-full"}
           >
             Login with Google

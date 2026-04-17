@@ -4,15 +4,19 @@ import {
   Heart,
   User,
   LogOut,
-  Plus,
   // Image as ImageIcon,
 } from "lucide-react";
-import { Button } from "@/shared/components/ui/button";
-import { useAppDispatch } from "@/shared/hooks/redux";
+import { Button, buttonVariants } from "@/shared/components/ui/button";
+import { useAppDispatch, useAppSelector } from "@/shared/hooks/redux";
 import { logout } from "@/shared/slices/authSlice";
+import { NavLink } from "react-router";
+import CreateThreadButton from "./CreateThreadButton";
 
 const Sidebar = () => {
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
+
+  if (!user) throw new Error("User not found");
 
   return (
     <aside className="w-64 h-screen border-r flex flex-col justify-between p-6">
@@ -20,16 +24,25 @@ const Sidebar = () => {
         <h1 className="text-2xl font-bold text-primary mb-8">Media</h1>
 
         <nav className="flex flex-col gap-2">
-          <SidebarItem icon={<Home size={18} />} label="Home" active />
-          <SidebarItem icon={<Search size={18} />} label="Search" />
-          <SidebarItem icon={<Heart size={18} />} label="Follows" />
-          <SidebarItem icon={<User size={18} />} label="Profile" />
+          <SidebarItem path="/" icon={<Home size={18} />} label="Home" />
+          <SidebarItem
+            path="/search"
+            icon={<Search size={18} />}
+            label="Search"
+          />
+          <SidebarItem
+            path={`/${user.username}/following`}
+            icon={<Heart size={18} />}
+            label="Follows"
+          />
+          <SidebarItem
+            path={`/${user.username}`}
+            icon={<User size={18} />}
+            label="Profile"
+          />
         </nav>
 
-        <Button className="mt-6 w-full rounded-full">
-          <Plus size={16} />
-          Create Post
-        </Button>
+        <CreateThreadButton />
       </div>
 
       <Button
@@ -47,21 +60,27 @@ const Sidebar = () => {
 export default Sidebar;
 
 function SidebarItem({
+  path,
   icon,
   label,
-  active,
 }: {
   icon: React.ReactNode;
   label: string;
-  active?: boolean;
+  path: string;
 }) {
   return (
-    <Button
-      variant={active ? "secondary" : "ghost"}
-      className="justify-start gap-3"
+    <NavLink
+      to={path}
+      end
+      className={({ isActive }) =>
+        buttonVariants({
+          variant: isActive ? "secondary" : "ghost",
+          className: "justify-start gap-3",
+        })
+      }
     >
       {icon}
       {label}
-    </Button>
+    </NavLink>
   );
 }
