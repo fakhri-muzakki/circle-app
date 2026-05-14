@@ -8,7 +8,7 @@ import fetchData from "@/shared/utils/fetch";
 import { ChevronLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useParams } from "react-router";
-import ProfileNotFound from "./ProfileNotfound";
+import ProfileNotFound from "./ProfileNotFound";
 
 export type CurrentUser = User & { isFollowing: boolean };
 
@@ -26,7 +26,20 @@ const ProfilePage = () => {
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
-      const result = await fetchData<ThreadsByUserIdRes>({
+      const result = await fetchData<
+        ThreadsByUserIdRes & {
+          isFollowing: boolean;
+          id: string;
+          name: string;
+          email: string;
+          avatar: string;
+          password: string;
+          username: string;
+          bio: string;
+          followers: string;
+          following: string;
+        }
+      >({
         url: `${import.meta.env.VITE_API_URL}/api/users/${username}/threads`,
         options: {
           headers: {
@@ -36,6 +49,8 @@ const ProfilePage = () => {
       });
 
       if (result.data) {
+        console.log("======================================= masuk if tea");
+        console.log(result.data);
         const images = result.data.threads
           .filter((thread) => thread.image)
           .map((thread) => thread.image as string);
