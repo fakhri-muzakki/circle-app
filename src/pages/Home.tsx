@@ -21,8 +21,6 @@ export default function HomePage() {
     throw new Error("Token invalid");
   }
 
-  console.log(user);
-
   useEffect(() => {
     const initialData = async (): Promise<void> => {
       const apiUrl = import.meta.env.VITE_API_URL;

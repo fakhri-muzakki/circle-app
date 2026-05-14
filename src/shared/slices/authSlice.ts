@@ -48,6 +48,13 @@ const authSlice = createSlice({
       localStorage.removeItem("user");
       localStorage.removeItem("token");
     },
+    reFillToken: (state) => {
+      const storedUser = localStorage.getItem("user");
+      const storedToken = localStorage.getItem("token");
+
+      state.user = storedUser ? JSON.parse(storedUser) : null;
+      state.token = storedToken ? storedToken : null;
+    },
     // Untuk edit user profile
     editUserProfile: (state, action: PayloadAction<Partial<User>>) => {
       if (state.user) {
@@ -79,6 +86,11 @@ const authSlice = createSlice({
   },
 });
 
-export const { login, logout, editUserProfile, updateFollowerCount } =
-  authSlice.actions;
+export const {
+  login,
+  logout,
+  editUserProfile,
+  updateFollowerCount,
+  reFillToken,
+} = authSlice.actions;
 export default authSlice.reducer;

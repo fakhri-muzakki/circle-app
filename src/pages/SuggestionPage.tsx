@@ -24,8 +24,6 @@ const SuggestionPage = () => {
     isError,
   } = useUsers();
 
-  // console.log(data);
-
   const sentinelRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const observer = new IntersectionObserver(

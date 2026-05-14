@@ -41,7 +41,6 @@ const RegisterPage = () => {
   });
 
   const onSubmit = async (payload: RegisterData) => {
-    console.log(payload);
     const result = await fetchData<RegisterRes>({
       url: `${import.meta.env.VITE_API_URL}/api/auth/register`,
       options: {

@@ -10,8 +10,23 @@ const fetchData = async <T>({
   try {
     const res = await fetch(url, options);
 
-    if (!res.ok && res.status >= 500) {
-      throw new Error(`Terjadi kesalahan pada saat hit end point : ${url}`);
+    if (!res.ok) {
+      if (res.status === 401) {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+
+        window.location.replace("/login");
+
+        throw new Error("Unauthorized");
+      }
+
+      if (res.status >= 500) {
+        throw new Error("Internal server error");
+      }
+
+      const errorJson = await res.json();
+
+      throw new Error(errorJson.message || "Request failed");
     }
 
     const json = await res.json();
